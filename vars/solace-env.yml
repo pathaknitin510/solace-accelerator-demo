@@ -86,7 +86,7 @@ rdp_restConsumers:
   
 #queues
 queues:
-- queueName: solace-accelerators12
+- queueName: solace-accelerators2
   accessType: "non-exclusive"
   owner: "foo"
   ingressEnabled: true
