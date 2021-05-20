@@ -1,0 +1,5 @@
+{
+   "queueBindingName": "solace-accelerators1",
+   "gatewayReplaceTargetAuthorityEnabled": False,
+   "restDeliveryPointName": "solace-accelerators1"
+}

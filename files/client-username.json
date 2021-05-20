@@ -1,0 +1,7 @@
+{
+ "clientUsername": "solace-accelerators1",
+ "aclProfileName": "solace-accelerators1",
+ "clientProfileName": "default",
+ "enabled": True,
+ "password": "solace-accelerators1"
+}

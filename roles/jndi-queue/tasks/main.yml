@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for JNDI Queue "{{ jq.queueName }}"
+  template: src=templates/jndi-queue.json.j2 dest=files/jndi-queue.json
+
+- name: Create JNDI Queue "{{ jq.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiQueues"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/jndi-queue.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jq.action == 'POST'
+
+- name: Error in JNDI Queue creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jq.action == 'POST'
+  
+- name: Update JNDI Queue "{{ jq.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiQueues/{{ jq.queueName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/jndi-queue.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jq.action == 'PATCH'
+
+- name: Error in JNDI Queue update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jq.action == 'PATCH'  
+  
+- name: Delete JNDI Queue "{{ jq.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiQueues/{{ jq.queueName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jq.action == 'DELETE'
+
+- name: Error in JNDI Queue deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jq.action == 'DELETE'    

@@ -1,0 +1,7 @@
+{
+ "aclProfileName": "solace-accelerators1",
+ "clientConnectDefaultAction": "allow",
+ "publishTopicDefaultAction": "disallow",
+ "subscribeShareNameDefaultAction": "allow",
+ "subscribeTopicDefaultAction": "allow"
+}

@@ -1,0 +1,6 @@
+{
+ "bridgeName": "solace-accelerators",
+ "bridgeVirtualRouter": "primary",
+ "deliverAlwaysEnabled": False,
+ "remoteSubscriptionTopic": "soalce-accelerators"
+}

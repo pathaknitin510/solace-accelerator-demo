@@ -1,0 +1,15 @@
+{
+ "bridgeName": "solace-accelerators",
+ "bridgeVirtualRouter": "primary",
+ "enabled": False,
+ "maxTtl": 8,
+ "remoteAuthenticationBasicClientUsername": "",
+ "remoteAuthenticationBasicPassword": "",
+ "remoteAuthenticationClientCertContent": "",
+ "remoteAuthenticationClientCertPassword": "",
+ "remoteAuthenticationScheme": "basic",
+ "remoteConnectionRetryCount": 0,
+ "remoteConnectionRetryDelay": 3,
+ "remoteDeliverToOnePriority": "p1",
+ "tlsCipherSuiteList": "default"
+}

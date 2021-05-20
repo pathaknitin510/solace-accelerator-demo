@@ -1,0 +1,166 @@
+--- 
+#jndi-connectionFactories
+jndi_connectionFactories:
+- allowDuplicateClientIdEnabled: false
+  clientDescription: ""
+  clientId: ""
+  connectionFactoryName: "solace-accelerators1"
+  dtoReceiveOverrideEnabled: true
+  dtoReceiveSubscriberLocalPriority: 1
+  dtoReceiveSubscriberNetworkPriority: 1
+  dtoSendEnabled: false
+  dynamicEndpointCreateDurableEnabled: false
+  dynamicEndpointRespectTtlEnabled: true
+  guaranteedReceiveAckTimeout: 1000
+  guaranteedReceiveReconnectRetryCount: -1
+  guaranteedReceiveReconnectRetryWait:  3000
+  guaranteedReceiveWindowSize: 18
+  guaranteedReceiveWindowSizeAckThreshold: 60
+  guaranteedSendAckTimeout: 2000
+  guaranteedSendWindowSize: 255
+  messagingDefaultDeliveryMode: "persistent"
+  messagingDefaultDmqEligibleEnabled: false
+  messagingDefaultElidingEligibleEnabled: false
+  messagingJmsxUserIdEnabled: false
+  messagingTextInXmlPayloadEnabled: true
+  transportCompressionLevel: -1
+  transportConnectRetryCount: 0
+  transportConnectRetryPerHostCount: 0
+  transportConnectTimeout: 30000
+  transportDirectTransportEnabled: true
+  transportKeepaliveCount: 3
+  transportKeepaliveEnabled: true
+  transportKeepaliveInterval: 3000
+  transportMsgCallbackOnIoThreadEnabled: false
+  transportOptimizeDirectEnabled: false
+  transportPort: -1
+  transportReadTimeout: 10000
+  transportReceiveBufferSize: 65536
+  transportTcpNoDelayEnabled: true
+  xaEnabled: false
+  
+  action: POST
+
+#jndi-queues
+jndi_queues:
+- physicalName: "solace-accelerators-account"
+  queueName: "solace-accelerators2"
+  
+  action: POST
+  
+#jndi-topics
+jndi_topics:
+- physicalName: ""
+  topicName: "solace-accelerators3"  
+  
+  action: POST
+  
+#rdp-endpoints
+rdp_endpoints:
+- restDeliveryPointName: "solace-accelerators1"
+  clientProfileName: "default"
+  enabled: false
+  subscription_queues:
+  - "solace-accelerators1"
+  subscription_restConsumers:
+  - "solace-accelerators1"
+  
+  action: POST
+
+#rdp_queueBindings
+rdp_queueBindings:
+- gatewayReplaceTargetAuthorityEnabled: false
+  queueBindingName: "solace-accelerators1"
+  restDeliveryPointName: "solace-accelerators1"
+  
+  action: POST
+  
+#rdp_restConsumers
+rdp_restConsumers:
+- tlsEnabled: false
+  restDeliveryPointName: "solace-accelerators1"
+  retryDelay: 3
+  restConsumerName: "solace-accelerators1"
+  
+  action: POST
+  
+#queues
+queues:
+- queueName: solace-accelerators2
+  accessType: "non-exclusive"
+  owner: "foo"
+  ingressEnabled: true
+  egressEnabled: false 
+  permission: "consume"
+  maxMsgSpoolUsage: 100
+  
+  action: POST
+
+- queueName: solace-accelerators3
+  accessType: "exclusive"
+  owner: "foo"
+  ingressEnabled: true
+  egressEnabled: false 
+  permission: "consume"
+  maxMsgSpoolUsage: 100
+  
+  action: POST
+  
+#queue_subscriptions
+queue_subscriptions:
+- queueName: "solace-accelerators2"
+  subscriptionTopic: "solace-accelerators-topic"
+  
+  action: POST
+  
+#bridges
+bridges:
+- bridgeName: "solace-accelerators"
+  bridgeVirtualRouter: "primary"
+  enabled: false
+  maxTtl: 8 
+  remoteAuthenticationBasicClientUsername: ""
+  remoteAuthenticationBasicPassword: ""
+  remoteAuthenticationClientCertContent: ""
+  remoteAuthenticationClientCertPassword: ""
+  remoteAuthenticationScheme: "basic"
+  remoteConnectionRetryCount: 0
+  remoteConnectionRetryDelay: 3
+  remoteDeliverToOnePriority: "p1"
+  tlsCipherSuiteList: "default"
+  
+  action: POST
+  
+#remoteMsgVPN
+remoteMsgVPN:
+- bridgeName: "solace-accelerators"
+  bridgeVirtualRouter: "primary"
+  clientUsername: ""
+  compressedDataEnabled: false
+  connectOrder: 4
+  egressFlowWindowSize: 255
+  enabled: false
+  password: ""
+  queueBinding: ""
+  remoteMsgVpnLocation: "v:primary"
+  remoteMsgVpnName: "soalce-accelerators1"
+  tlsEnabled: false
+  unidirectionalClientProfile: "#client-profile"
+  
+  action: POST
+  
+#remote_subscription
+remote_subscription:
+- bridgeName: "solace-accelerators"
+  bridgeVirtualRouter: "primary"
+  deliverAlwaysEnabled: false
+  remoteSubscriptionTopic: "soalce-accelerators"
+  
+  action: POST  
+  
+#dmr_bridges
+dmr_bridges:
+- remoteMsgVpnName: ""
+  remoteNodeName: "solace-accelerators" 
+    
+  action: POST 

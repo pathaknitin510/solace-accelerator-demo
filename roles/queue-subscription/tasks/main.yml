@@ -1,0 +1,47 @@
+---
+- name: Compose SEMPv2 request payload for subscription on Queue "{{ qs.queueName }}"
+  template: src=templates/queue-subscription.json.j2 dest=files/queue-subscription.json
+
+- name: Add Queue Subscription "{{ qs.subscriptionTopic }}" to queue "{{ qs.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}: {{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/queues/{{ qs.queueName }}/subscriptions"
+   method: POST
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/queue-subscription.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: qs.action == 'POST'
+
+- name: Error in Queue subscription addition?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and qs.action == 'POST'
+  
+- name: Delete Queue Subscription "{{ qs.subscriptionTopic }}" from queue "{{ qs.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}: {{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/queues/{{ qs.queueName }}/subscriptions/{{ qs.subscriptionTopic }}"
+   method: DELETE
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: qs.action == 'DELETE'
+
+- name: Error in Queue subscription deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and qs.action == 'DELETE'  

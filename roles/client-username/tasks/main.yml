@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for Client Username "{{ cu.clientUsername }}"
+  template: src=templates/client-username.json.j2 dest=files/client-username.json
+
+- name: Create Client Username "{{ cu.clientUsername }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/clientUsernames"
+   method: POST
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/client-username.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: cu.action == 'POST'
+
+- name: Error in Client-Username creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and cu.action == 'POST'
+  
+- name: Update Client Username "{{ cu.clientUsername }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/clientUsernames/{{ cu.clientUsername }}"
+   method: PATCH
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/client-username.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: cu.action == 'PATCH'
+
+- name: Error in Client-Username update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and cu.action == 'PATCH'
+  
+- name: Delete Client Username "{{ cu.clientUsername }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/clientUsernames/{{ cu.clientUsername }}"
+   method: DELETE
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: cu.action == 'DELETE'
+
+- name: Error in Client-Username deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and cu.action == 'DELETE'    

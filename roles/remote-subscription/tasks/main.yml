@@ -1,0 +1,47 @@
+---
+- name: Compose SEMPv2 request payload for Remote Subscription  "{{ rs.remoteSubscriptionTopic }}"
+  template: src=templates/remote-subscription.json.j2 dest=files/remote-subscription.json
+
+- name: Create Remote Subscription "{{ rs.remoteSubscriptionTopic }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/bridges/{{ rs.bridgeName }},{{ rs.bridgeVirtualRouter }}/remoteSubscriptions"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/remote-subscription.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rs.action == 'POST' 
+
+- name: Error in Remote Subscription creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rs.action == 'POST'
+   
+- name: Delete Remote Subscription "{{ rs.remoteSubscriptionTopic }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/bridges/{{ rs.bridgeName }},{{ rs.bridgeVirtualRouter }}/remoteSubscriptions/{{ rs.remoteSubscriptionTopic }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rs.action == 'DELETE' 
+
+- name: Error in Remote Subscription deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rs.action == 'DELETE'    

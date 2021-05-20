@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for DMR Bridge "{{ dmr.remoteNodeName }}"
+  template: src=templates/dmr-bridge.json.j2 dest=files/dmr-bridge.json
+
+- name: Create DMR Bridge "{{ dmr.remoteNodeName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/dmrBridges"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/dmr-bridge.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: dmr.action == 'POST' 
+
+- name: Error in DMR Bridge creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and dmr.action == 'POST'
+  
+- name: Update DMR Bridge "{{ dmr.remoteNodeName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/dmrBridges/{{ dmr.remoteNodeName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/dmr-bridge.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: dmr.action == 'PATCH' 
+
+- name: Error in DMR Bridge update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and dmr.action == 'PATCH'  
+  
+- name: Delete DMR Bridge "{{ dmr.remoteNodeName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/dmrBridges/{{ dmr.remoteNodeName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: dmr.action == 'DELETE' 
+
+- name: Error in DMR Bridge deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and dmr.action == 'DELETE'    

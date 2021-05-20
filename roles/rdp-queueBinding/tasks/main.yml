@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for Queue Binding on RDP "{{ rq.restDeliveryPointName }}"
+  template: src=templates/rdp-queueBinding.json.j2 dest=files/rdp-queueBinding.json
+
+- name: Add Queue "{{ rq.queueBindingName }}" to RDP "{{ rq.restDeliveryPointName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/restDeliveryPoints/{{ rq.restDeliveryPointName }}/queueBindings"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/rdp-queueBinding.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rq.action == 'POST'
+
+- name: Error in Queue Binding addition?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rq.action == 'POST'
+  
+- name: Update Queue "{{ rq.queueBindingName }}" to RDP "{{ rq.restDeliveryPointName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/restDeliveryPoints/{{ rq.restDeliveryPointName }}/queueBindings/{{ rq.queueBindingName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/rdp-queueBinding.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rq.action == 'PATCH'
+
+- name: Error in Queue Binding update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rq.action == 'PATCH'
+  
+- name: Delete Queue "{{ rq.queueBindingName }}" from RDP "{{ rq.restDeliveryPointName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/restDeliveryPoints/{{ rq.restDeliveryPointName }}/queueBindings/{{ rq.queueBindingName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rq.action == 'DELETE'
+
+- name: Error in Queue Binding deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rq.action == 'DELETE'    

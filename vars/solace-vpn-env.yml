@@ -1,0 +1,17 @@
+---
+#message-vpn
+message_vpn:
+ msgVpnName: "solace-ansible-demo"
+ authenticationBasicType: "internal"
+ enabled: true
+ maxConnectionCount: 60
+ maxSubscriptionCount: 200
+ eventLargeMsgThreshold: 2048
+ maxEgressFlowCount: 100
+ maxEndpointCount: 100
+ maxIngressFlowCount: 100
+ maxTransactedSessionCount: 100
+ maxTransactionCount: 100
+ maxMsgSpoolUsage: 1000
+ 
+ action: POST

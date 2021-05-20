@@ -1,0 +1,68 @@
+--- 
+#client-profiles
+client_profiles:
+- clientProfileName: "solace-accelerators1"
+  allowBridgeConnectionsEnabled: false
+  allowCutThroughForwardingEnabled: false
+  allowGuaranteedEndpointCreateDurability: "all"
+  allowGuaranteedEndpointCreateEnabled: false
+  allowGuaranteedMsgReceiveEnabled: true
+  allowGuaranteedMsgSendEnabled: true
+  allowSharedSubscriptionsEnabled: false
+  allowTransactedSessionsEnabled: false
+  apiQueueManagementCopyFromOnCreateName: ""
+  apiQueueManagementCopyFromOnCreateTemplateName: ""
+  apiTopicEndpointManagementCopyFromOnCreateName: ""
+  apiTopicEndpointManagementCopyFromOnCreateTemplateName: ""
+  compressionEnabled: true
+  elidingDelay: 0
+  elidingEnabled: false
+  elidingMaxTopicCount: 256
+  maxConnectionCountPerClientUsername: 10
+  maxEgressFlowCount: 16000
+  maxEndpointCountPerClientUsername: 16000
+  maxIngressFlowCount: 16000
+  maxSubscriptionCount: 20
+  maxTransactedSessionCount: 10
+  maxTransactionCount: 10
+  queueControl1MaxDepth: 20000
+  queueControl1MinMsgBurst: 4
+  queueDirect1MaxDepth: 20000
+  queueDirect1MinMsgBurst: 4
+  queueDirect2MaxDepth: 20000
+  queueDirect2MinMsgBurst: 4
+  queueDirect3MaxDepth: 20000
+  queueDirect3MinMsgBurst: 4
+  queueGuaranteed1MaxDepth: 20000
+  queueGuaranteed1MinMsgBurst: 255
+  rejectMsgToSenderOnNoSubscriptionMatchEnabled: false
+  replicationAllowClientConnectWhenStandbyEnabled: false
+  tcpCongestionWindowSize: 2
+  tcpKeepaliveCount: 5
+  tcpKeepaliveIdleTime: 3
+  tcpKeepaliveInterval: 1
+  tcpMaxSegmentSize: 1460
+  tcpMaxWindowSize: 256
+  tlsAllowDowngradeToPlainTextEnabled: false
+  
+  action: POST
+  
+#acl-profiles
+acl_profiles:
+- aclProfileName: "solace-accelerators1"
+  clientConnectDefaultAction: "allow"
+  publishTopicDefaultAction: "disallow"
+  subscribeShareNameDefaultAction: "allow"
+  subscribeTopicDefaultAction: "allow"
+  
+  action: POST
+  
+#client-usernames
+client_usernames:
+- clientUsername: "solace-accelerators1"
+  clientProfileName: "default"
+  aclProfileName: "solace-accelerators1"
+  password: "solace-accelerators1"
+  enabled: true
+  
+  action: POST

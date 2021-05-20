@@ -1,0 +1,9 @@
+{
+ "queueName": "solace-accelerators3",
+ "ingressEnabled": True ,
+ "egressEnabled": False ,
+ "permission": "consume" ,
+ "owner": "foo" ,
+ "accessType": "exclusive",
+ "maxMsgSpoolUsage": 100
+}

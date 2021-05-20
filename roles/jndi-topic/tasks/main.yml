@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for JNDI Topic "{{ jt.topicName }}"
+  template: src=templates/jndi-topic.json.j2 dest=files/jndi-topic.json
+
+- name: Create JNDI Topic "{{ jt.topicName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiTopics"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/jndi-topic.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jt.action == 'POST'
+
+- name: Error in JNDI Topic creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jt.action == 'POST'
+  
+- name: Update JNDI Topic "{{ jt.topicName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiTopics/{{ jt.topicName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/jndi-topic.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jt.action == 'PATCH'
+
+- name: Error in JNDI Topic update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jt.action == 'PATCH'  
+  
+- name: Delete JNDI Topic "{{ jt.topicName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiTopics/{{ jt.topicName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jt.action == 'DELETE'
+
+- name: Error in JNDI Topic deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jt.action == 'DELETE'    

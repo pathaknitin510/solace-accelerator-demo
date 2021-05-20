@@ -1,0 +1,5 @@
+{
+ "clientProfileName": "default",
+ "enabled": False,
+ "restDeliveryPointName": "solace-accelerators1"
+}

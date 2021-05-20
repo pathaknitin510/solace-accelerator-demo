@@ -1,0 +1,4 @@
+{
+ "queueName": "solace-accelerators2",
+ "subscriptionTopic": "solace-accelerators-topic"
+}

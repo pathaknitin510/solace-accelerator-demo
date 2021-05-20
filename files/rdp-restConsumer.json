@@ -1,0 +1,7 @@
+{
+  "restDeliveryPointName": "solace-accelerators1",
+  "restConsumerName": "solace-accelerators1",
+  "tlsEnabled": False,
+  "retryDelay": 3
+  
+}

@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for JNDI connectionFactory "{{ jndi.connectionFactoryName }}"
+  template: src=templates/jndi-connectionFactory.json.j2 dest=files/jndi-connectionFactory.json
+
+- name: Create JNDI connectionFactory "{{ jndi.connectionFactoryName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiConnectionFactories"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/jndi-connectionFactory.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jndi.action == 'POST' 
+
+- name: Error in JNDI connectionFactory creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jndi.action == 'POST'
+  
+- name: Update JNDI connectionFactory "{{ jndi.connectionFactoryName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiConnectionFactories/{{ jndi.connectionFactoryName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/jndi-connectionFactory.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jndi.action == 'PATCH' 
+
+- name: Error in JNDI connectionFactory update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jndi.action == 'PATCH'  
+  
+- name: Delete JNDI connectionFactory "{{ jndi.connectionFactoryName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/jndiConnectionFactories/{{ jndi.connectionFactoryName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: jndi.action == 'DELETE' 
+
+- name: Error in JNDI connectionFactory deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and jndi.action == 'DELETE'    

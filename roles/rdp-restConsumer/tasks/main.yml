@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for Rest Consumer on RDP "{{ rr.restDeliveryPointName }}"
+  template: src=templates/rdp-restConsumer.json.j2 dest=files/rdp-restConsumer.json
+
+- name: Add Rest Consumer "{{ rr.restConsumerName }}" to RDP "{{ rr.restDeliveryPointName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/restDeliveryPoints/{{ rr.restDeliveryPointName }}/restConsumers"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/rdp-restConsumer.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rr.action == 'POST'
+
+- name: Error in Rest Consumer addition?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rr.action == 'POST'
+  
+- name: Update Rest Consumer "{{ rr.restConsumerName }}" to RDP "{{ rr.restDeliveryPointName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/restDeliveryPoints/{{ rr.restDeliveryPointName }}/restConsumers/{{ rr.restConsumerName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/rdp-restConsumer.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rr.action == 'PATCH'
+
+- name: Error in Rest Consumer update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rr.action == 'PATCH'  
+  
+- name: Delete Rest Consumer "{{ rr.restConsumerName }}" from RDP "{{ rr.restDeliveryPointName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/restDeliveryPoints/{{ rr.restDeliveryPointName }}/restConsumers/{{ rr.restConsumerName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rr.action == 'DELETE'
+
+- name: Error in Rest Consumer delete?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rr.action == 'DELETE'    

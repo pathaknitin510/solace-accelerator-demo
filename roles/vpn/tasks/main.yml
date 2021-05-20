@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for VPN "{{ vpn.msgVpnName }}"
+  template: src=templates/vpn.json.j2 dest=files/vpn.json
+
+- name: Create Message-vpn "{{ vpn.msgVpnName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns"
+   method: POST
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/vpn.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: vpn.action == 'POST'
+
+- name: Error in VPN Creation?
+  debug:
+    var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and vpn.action == 'POST'
+  
+- name: Update Message-vpn "{{ vpn.msgVpnName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn.msgVpnName }}"
+   method: PATCH
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/vpn.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: vpn.action == 'PATCH'
+
+- name: Error in VPN Update?
+  debug:
+    var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and vpn.action == 'PATCH'  
+  
+- name: Delete Message-vpn "{{ vpn.msgVpnName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn.msgVpnName }}"
+   method: DELETE
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: vpn.action == 'DELETE'
+
+- name: Error in VPN deletion?
+  debug:
+    var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and vpn.action == 'DELETE'    

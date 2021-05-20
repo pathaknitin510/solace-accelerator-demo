@@ -1,0 +1,15 @@
+{
+ "bridgeName": "solace-accelerators",
+ "bridgeVirtualRouter": "primary",
+ "clientUsername": "",
+ "compressedDataEnabled": False,
+ "connectOrder": 4,
+ "egressFlowWindowSize": 255,
+ "enabled": False,
+ "password": "",
+ "queueBinding": "",
+ "remoteMsgVpnLocation": "v:primary",
+ "remoteMsgVpnName": "soalce-accelerators1",
+ "tlsEnabled": False,
+ "unidirectionalClientProfile": "#client-profile"
+}

@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for Client Profile "{{ cp.clientProfileName }}"
+  template: src=templates/client-profile.json.j2 dest=files/client-profile.json
+
+- name: Create Client Profile "{{ cp.clientProfileName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/clientProfiles"
+   method: POST
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/client-profile.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: cp.action == 'POST'
+
+- name: Error in Client Profile creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and cp.action == 'POST'
+  
+- name: Update Client Profile "{{ cp.clientProfileName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/clientProfiles/{{ cp.clientProfileName }}"
+   method: PATCH
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/client-profile.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1 
+  when: cp.action == 'PATCH'
+  
+- name: Error in Client Profile update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and cp.action == 'PATCH'   
+  
+- name: Delete Client Profile "{{ cp.clientProfileName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/clientProfiles/{{ cp.clientProfileName }}"
+   method: DELETE
+   user: "{{ semp_username }}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1 
+  when: cp.action == 'DELETE'
+  
+- name: Error in Client Profile deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and cp.action == 'DELETE'     

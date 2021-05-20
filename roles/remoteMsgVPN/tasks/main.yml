@@ -1,0 +1,71 @@
+---
+- name: Compose SEMPv2 request payload for remoteMsgVPN  "{{ rVPN.remoteMsgVpnName }}"
+  template: src=templates/remoteMsgVPN.json.j2 dest=files/remoteMsgVPN.json
+
+- name: Create remoteMsgVPN "{{ rVPN.remoteMsgVpnName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/bridges/{{ rVPN.bridgeName }},{{ rVPN.bridgeVirtualRouter }}/remoteMsgVpns"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/remoteMsgVPN.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rVPN.action == 'POST' 
+
+- name: Error in remoteMsgVPN creation?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rVPN.action == 'POST'
+  
+- name: Update remoteMsgVPN "{{ rVPN.remoteMsgVpnName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/bridges/{{ rVPN.bridgeName }},{{ rVPN.bridgeVirtualRouter }}/remoteMsgVpns/{{ rVPN.remoteMsgVpnName }},{{ rVPN.remoteMsgVpnLocation }},{{ rVPN.remoteMsgVpnInterface }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/remoteMsgVPN.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rVPN.action == 'PATCH' 
+
+- name: Error in remoteMsgVPN update?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rVPN.action == 'PATCH'  
+  
+- name: Delete remoteMsgVPN "{{ rVPN.remoteMsgVpnName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/bridges/{{ rVPN.bridgeName }},{{ rVPN.bridgeVirtualRouter }}/remoteMsgVpns/{{ rVPN.remoteMsgVpnName }},{{ rVPN.remoteMsgVpnLocation }},{{ rVPN.remoteMsgVpnInterface }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: rVPN.action == 'DELETE' 
+
+- name: Error in remoteMsgVPN deletion?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and rVPN.action == 'DELETE'    

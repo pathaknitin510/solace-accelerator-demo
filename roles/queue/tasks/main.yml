@@ -1,0 +1,76 @@
+---
+- name: Compose SEMPv2 request payload for Queue "{{ q.queueName }}"
+  template: src=templates/queue.json.j2 dest=files/queue.json
+
+- name: Create Queue "{{ q.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/queues"
+   method: POST
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/queue.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: q.action == 'POST' 
+  
+- name: Error in Queue creation ?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and q.action == 'POST'    
+  
+- name: Update Queue "{{ q.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/queues/{{ q.queueName }}"
+   method: PATCH
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   headers:
+    Content-Type: "application/json"
+   body: '{{ lookup("file","files/queue.json") }}'
+   body_format: json
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: q.action == 'PATCH'
+  
+- name: Error in Queue update ?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and q.action == 'PATCH'
+
+- name: Prompt to confirm the deletion of "{{ q.queueName }}" queue
+  pause:
+     prompt: "Do you really want to delete queue??\n\nPress ENTER to delete queue or CTRL+C and A to abort..." 
+  when: q.action == 'DELETE'    
+  
+- name: Delete Queue "{{ q.queueName }}"
+  uri:
+   url: "https://{{ mgmt_host }}:{{ mgmt_port }}/SEMP/v2/config/msgVpns/{{ vpn }}/queues/{{ q.queueName }}"
+   method: DELETE
+   user: "{{ semp_username}}"
+   password: "{{ semp_password }}"
+   force_basic_auth: yes
+   status_code: 200
+   return_content: yes
+  register: result
+  ignore_errors: True
+  retries: 3
+  delay: 1
+  when: q.action == 'DELETE'  
+  
+- name: Error in Queue deletion ?
+  debug:
+   var: result.json.meta.error.status
+  when: (result.json.meta.responseCode is undefined or result.json.meta.responseCode != 200) and q.action == 'DELETE'

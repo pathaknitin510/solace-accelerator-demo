@@ -1,0 +1,285 @@
+---
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+    - include_vars: vars/solace-vpn-env.yml
+  tags: vpn  
+    
+  tasks:
+   
+  - name: VPN
+    include_role:
+     name: vpn
+    vars:
+     vpn: "{{ message_vpn }}"
+      
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+    - include_vars: vars/solace-vpn-env.yml  
+    - include_vars: vars/solace-profiles-env.yml
+  tags: client_profile  
+    
+  tasks:      
+
+  - name: Client Profiles
+    with_items: "{{ client_profiles }}"
+    include_role:
+     name: client-profile
+    vars:
+     cp: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}" 
+      
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml  
+   - include_vars: vars/solace-profiles-env.yml
+  tags: acl_profile  
+    
+  tasks:      
+
+  - name: ACL Profiles
+    with_items: "{{ acl_profiles }}"
+    include_role:
+     name: acl-profile
+    vars:
+     acl: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}" 
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml  
+   - include_vars: vars/solace-profiles-env.yml
+  tags: client_username  
+    
+  tasks:     
+      
+  - name: Client Usernames
+    with_items: "{{ client_usernames }}"
+    include_role:
+     name: client-username
+    vars:
+     cu: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"    
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: jndi_connectionFactory  
+    
+  tasks:     
+    
+  - name: JNDI ConnectionFactories
+    with_items: "{{ jndi_connectionFactories }}"
+    include_role:
+     name: jndi-connectionFactory
+    vars:
+     jndi: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: jndi_queue  
+    
+  tasks:     
+     
+  - name: JNDI Queues
+    with_items: "{{ jndi_queues }}"
+    include_role:
+     name: jndi-queue
+    vars:
+     jq: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"  
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: jndi_topic 
+    
+  tasks:     
+      
+  - name: JNDI Topics
+    with_items: "{{ jndi_topics }}"
+    include_role:
+     name: jndi-topic
+    vars:
+     jt: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"       
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: queues  
+    
+  tasks:     
+     
+  - name: Queues
+    with_items: "{{ queues }}"
+    include_role:
+     name: queue
+    vars:
+     q: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}" 
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: queue_subscription 
+    
+  tasks:     
+      
+  - name: Queue Subscriptions
+    with_items: "{{ queue_subscriptions }}"
+    include_role:
+     name: queue-subscription
+    vars:
+     qs: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"      
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml 
+  tags: rdp  
+    
+  tasks:     
+      
+  - name: RDP Endpoints
+    with_items: "{{ rdp_endpoints }}"
+    include_role:
+     name: rdp-endpoint
+    vars:
+     rdp: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}" 
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: rdp_queueBinding  
+    
+  tasks:     
+
+  - name: Queue Bindings
+    with_items: "{{ rdp_queueBindings }}"
+    include_role:
+     name: rdp-queueBinding
+    vars:
+     rq: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}" 
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: rdp_restConsumer   
+    
+  tasks:     
+
+  - name: Rest Consumers
+    with_items: "{{ rdp_restConsumers }}"
+    include_role:
+     name: rdp-restConsumer
+    vars:
+     rr: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: bridge  
+    
+  tasks:     
+     
+  - name: Bridges
+    with_items: "{{ bridges }}"
+    include_role:
+     name: bridge
+    vars:
+     br: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: remoteMsgVPN  
+    
+  tasks:     
+     
+  - name: remoteMsgVpns
+    with_items: "{{ remoteMsgVPN }}"
+    include_role:
+     name: remoteMsgVPN
+    vars:
+     rVPN: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: remote_subscription  
+    
+  tasks:     
+     
+  - name: Remote Subscription
+    with_items: "{{ remote_subscription }}"
+    include_role:
+     name: remote-subscription
+    vars:
+     rs: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"                    
+     
+- hosts: solace
+  connection: local
+  gather_facts: false
+  pre_tasks:
+   - include_vars: vars/solace-vpn-env.yml
+   - include_vars: vars/solace-env.yml   
+  tags: dmr_bridge  
+    
+  tasks:     
+     
+  - name: DMR Bridges
+    with_items: "{{ dmr_bridges }}"
+    include_role:
+     name: dmr-bridge
+    vars:
+     dmr: "{{ item }}"
+     vpn: "{{ message_vpn.msgVpnName }}"     
