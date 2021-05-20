@@ -94,7 +94,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
+  action: DELETE
 
 - queueName: solace-accelerators3
   accessType: "exclusive"
@@ -104,7 +104,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
+  action: DELETE
   
 #queue_subscriptions
 queue_subscriptions:
