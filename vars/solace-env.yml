@@ -86,6 +86,16 @@ rdp_restConsumers:
   
 #queues
 queues:
+- queueName: solace-accelerators1
+  accessType: "non-exclusive"
+  owner: "foo"
+  ingressEnabled: true
+  egressEnabled: false 
+  permission: "consume"
+  maxMsgSpoolUsage: 100
+  
+  action: POST
+  
 - queueName: solace-accelerators2
   accessType: "non-exclusive"
   owner: "foo"
@@ -95,8 +105,18 @@ queues:
   maxMsgSpoolUsage: 100
   
   action: POST
-
+  
 - queueName: solace-accelerators3
+  accessType: "non-exclusive"
+  owner: "foo"
+  ingressEnabled: true
+  egressEnabled: false 
+  permission: "consume"
+  maxMsgSpoolUsage: 100
+  
+  action: POST
+
+- queueName: solace-accelerators4
   accessType: "exclusive"
   owner: "foo"
   ingressEnabled: true
