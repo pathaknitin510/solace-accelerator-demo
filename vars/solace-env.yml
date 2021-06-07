@@ -143,6 +143,11 @@ queue_subscriptions:
   
   action: POST
   
+- queueName: "solace-accelerators3"
+  subscriptionTopic: "solace-accelerators-topic"
+  
+  action: POST  
+  
 #bridges
 bridges:
 - bridgeName: "solace-accelerators"
