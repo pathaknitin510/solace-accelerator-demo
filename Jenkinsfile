@@ -56,7 +56,7 @@ pipeline {
             agent any
 
             steps {
-              sh  'ansible-playbook solace-vpn.yml --tags ${params.TASK} -i ${params.ENV}'
+              sh  'ansible-playbook solace-vpn.yml --tags queues -i Dev-env.ini'
             }
         }
     }
