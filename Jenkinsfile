@@ -3,11 +3,11 @@ def approvalMap             // collect data from approval step
 pipeline {
     agent none
 	
-	parameters {
-        string(name: 'TASK', defaultValue: 'queues', description: 'Give Tasks')
-        choice(name: 'ENV', choices: ['Dev-env.ini', 'Test-env.ini'], description: 'Pick something')
+// 	parameters {
+//         string(name: 'TASK', defaultValue: 'queues', description: 'Give Tasks')
+//         choice(name: 'ENV', choices: ['Dev-env.ini', 'Test-env.ini'], description: 'Pick something')
 
-    }
+//     }
 
     stages {
         stage('Stage 1') {
@@ -56,7 +56,7 @@ pipeline {
             agent any
 
             steps {
-              sh  'ansible-playbook solace-vpn.yml --tags queues -i Dev-env.ini'
+              sh  "ansible-playbook solace-vpn.yml --tags queues -i Dev-env.ini"
             }
         }
     }
