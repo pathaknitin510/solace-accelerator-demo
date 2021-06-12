@@ -144,7 +144,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST  
+  action: PATCH
   
 #queue_subscriptions
 queue_subscriptions:
