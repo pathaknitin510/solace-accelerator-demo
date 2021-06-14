@@ -96,6 +96,16 @@ queues:
   
   action: PATCH
   
+- queueName: solace-accelerators2
+  accessType: "exclusive"
+  owner: "foo"
+  ingressEnabled: true
+  egressEnabled: false 
+  permission: "consume"
+  maxMsgSpoolUsage: 100
+  
+  action: POST  
+  
 #queue_subscriptions
 queue_subscriptions:
 - queueName: "solace-accelerators1"
