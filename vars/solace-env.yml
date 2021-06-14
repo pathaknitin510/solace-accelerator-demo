@@ -114,7 +114,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
+  action: DELETE
 
 - queueName: solace-accelerators4
   accessType: "exclusive"
@@ -124,7 +124,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
+  action: DELETE
   
 - queueName: solace-accelerators5
   accessType: "exclusive"
@@ -134,17 +134,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
-  
-- queueName: solace-accelerators6
-  accessType: "exclusive"
-  owner: "foo"
-  ingressEnabled: true
-  egressEnabled: false 
-  permission: "consume"
-  maxMsgSpoolUsage: 100
-  
-  action: PATCH
+  action: DELETE
   
 #queue_subscriptions
 queue_subscriptions:
