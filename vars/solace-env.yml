@@ -96,27 +96,12 @@ queues:
   
   action: POST
   
-- queueName: solace-accelerators2
-  accessType: "non-exclusive"
-  owner: "foo"
-  ingressEnabled: true
-  egressEnabled: false 
-  permission: "consume"
-  maxMsgSpoolUsage: 100
-  
-  action: POST
-  
 #queue_subscriptions
 queue_subscriptions:
 - queueName: "solace-accelerators1"
   subscriptionTopic: "solace-accelerators-topic"
   
   action: POST
-  
-- queueName: "solace-accelerators2"
-  subscriptionTopic: "solace-accelerators-topic"
-  
-  action: POST  
   
 #bridges
 bridges:
