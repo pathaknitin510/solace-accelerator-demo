@@ -106,36 +106,6 @@ queues:
   
   action: POST
   
-- queueName: solace-accelerators3
-  accessType: "non-exclusive"
-  owner: "foo"
-  ingressEnabled: true
-  egressEnabled: false 
-  permission: "consume"
-  maxMsgSpoolUsage: 100
-  
-  action: DELETE
-
-- queueName: solace-accelerators4
-  accessType: "exclusive"
-  owner: "foo"
-  ingressEnabled: true
-  egressEnabled: false 
-  permission: "consume"
-  maxMsgSpoolUsage: 100
-  
-  action: DELETE
-  
-- queueName: solace-accelerators5
-  accessType: "exclusive"
-  owner: "foo"
-  ingressEnabled: true
-  egressEnabled: false 
-  permission: "consume"
-  maxMsgSpoolUsage: 100
-  
-  action: DELETE
-  
 #queue_subscriptions
 queue_subscriptions:
 - queueName: "solace-accelerators2"
