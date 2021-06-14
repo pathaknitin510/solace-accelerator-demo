@@ -108,12 +108,12 @@ queues:
   
 #queue_subscriptions
 queue_subscriptions:
-- queueName: "solace-accelerators2"
+- queueName: "solace-accelerators1"
   subscriptionTopic: "solace-accelerators-topic"
   
   action: POST
   
-- queueName: "solace-accelerators3"
+- queueName: "solace-accelerators2"
   subscriptionTopic: "solace-accelerators-topic"
   
   action: POST  
