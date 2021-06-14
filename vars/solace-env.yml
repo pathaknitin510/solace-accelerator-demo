@@ -94,7 +94,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: PATCH
+  action: POST
   
 - queueName: solace-accelerators2
   accessType: "exclusive"
@@ -112,6 +112,11 @@ queue_subscriptions:
   subscriptionTopic: "solace-accelerators-topic"
   
   action: POST
+  
+- queueName: "solace-accelerators2"
+  subscriptionTopic: "solace-accelerators-topic"
+  
+  action: POST  
   
 #bridges
 bridges:
