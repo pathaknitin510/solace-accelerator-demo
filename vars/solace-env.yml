@@ -109,12 +109,12 @@ queues:
 #queue_subscriptions
 queue_subscriptions:
 - queueName: "Pharma.Contract.Status.Retry"
-  subscriptionTopic: "Pharma/Data/App/Common/General/>"
+  subscriptionTopic: "Pharma/Data/App/Common/General/*>"
   
   action: POST
   
 - queueName: "Dia.Contract.Status.Retry"
-  subscriptionTopic: "Dia/Data/App/Common/General/>"
+  subscriptionTopic: "Dia/Data/App/Common/General/*>"
   
   action: POST  
   
