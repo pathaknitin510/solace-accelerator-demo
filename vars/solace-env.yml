@@ -86,17 +86,17 @@ rdp_restConsumers:
   
 #queues
 queues:
-- queueName: solace-accelerators1
-  accessType: "non-exclusive"
+- queueName: Pharma.Contract.Status.Retry
+  accessType: "exclusive"
   owner: "foo"
   ingressEnabled: true
   egressEnabled: false 
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: PATCH
+  action: POST
   
-- queueName: solace-accelerators2
+- queueName: Dia.Contract.Status.Retry
   accessType: "exclusive"
   owner: "foo"
   ingressEnabled: true
@@ -104,17 +104,17 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 200
   
-  action: PATCH
+  action: POST
   
 #queue_subscriptions
 queue_subscriptions:
-- queueName: "solace-accelerators1"
-  subscriptionTopic: "solace-accelerators-topic"
+- queueName: "Pharma.Contract.Status.Retry"
+  subscriptionTopic: "Pharma/Data/App/Common/General/>"
   
   action: POST
   
-- queueName: "solace-accelerators2"
-  subscriptionTopic: "solace-accelerators-topic"
+- queueName: "Dia.Contract.Status.Retry"
+  subscriptionTopic: "Dia/Data/App/Common/General/>"
   
   action: POST  
   
