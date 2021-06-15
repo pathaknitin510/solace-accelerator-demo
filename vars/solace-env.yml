@@ -87,7 +87,7 @@ rdp_restConsumers:
 #queues
 queues:
 - queueName: solace-accelerators1
-  accessType: "exclusive"
+  accessType: "non-exclusive"
   owner: "foo"
   ingressEnabled: true
   egressEnabled: false 
@@ -102,7 +102,7 @@ queues:
   ingressEnabled: true
   egressEnabled: false 
   permission: "consume"
-  maxMsgSpoolUsage: 100
+  maxMsgSpoolUsage: 200
   
   action: POST  
   
