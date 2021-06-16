@@ -94,7 +94,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
+  action: PATCH
   
 - queueName: Dia.Contract.Status.Retry
   accessType: "exclusive"
@@ -104,7 +104,7 @@ queues:
   permission: "consume"
   maxMsgSpoolUsage: 100
   
-  action: POST
+  action: PATCH
   
 #queue_subscriptions
 queue_subscriptions:
