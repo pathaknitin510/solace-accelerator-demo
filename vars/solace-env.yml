@@ -87,7 +87,7 @@ rdp_restConsumers:
 #queues
 queues:
 - queueName: Pharma.Contract.Status.Retry
-  accessType: "exclusive"
+  accessType: "non-exclusive"
   owner: "foo"
   ingressEnabled: true
   egressEnabled: false 
