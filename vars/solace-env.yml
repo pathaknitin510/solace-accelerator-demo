@@ -92,7 +92,7 @@ queues:
   ingressEnabled: true
   egressEnabled: false 
   permission: "consume"
-  maxMsgSpoolUsage: 300
+  maxMsgSpoolUsage: 100
   
   action: POST
   
