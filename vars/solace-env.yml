@@ -87,7 +87,7 @@ rdp_restConsumers:
 #queues
 queues:
 - queueName: Pharma.Contract.Status.Retry
-  accessType: "non-exclusive"
+  accessType: "exclusive"
   owner: "foo"
   ingressEnabled: true
   egressEnabled: false 
@@ -114,7 +114,7 @@ queue_subscriptions:
   action: POST
   
 - queueName: "Dia.Contract.Status.Retry"
-  subscriptionTopic: "Dia/Data/App2/Common/General/*>"
+  subscriptionTopic: "Dia/Data/App1/Common/General/*>"
   
   action: POST  
   
